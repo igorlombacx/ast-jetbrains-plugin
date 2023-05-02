@@ -23,7 +23,7 @@ on:
         type: string
       javawrapperversion:
         description: 'Java Wrapper Version'
-        required: true
+        required: false
         type: string
       channels:
         description: 'Channels to publish development releases'

@@ -7,9 +7,9 @@ plugins {
 group 'com.checkmarx'
 version System.getenv('RELEASE_VERSION') ?: "dev"
 
-def javaWrapperVersion = System.getenv('JAVA_WRAPPER_VERSION') ?: "1.0.56"
-def remoteRobotVersion = '0.10.11'
-def jUnitVersion = '2.4.3'
+javaWrapperVersion = System.getenv('JAVA_WRAPPER_VERSION') ?: "1.0.56"
+remoteRobotVersion = '0.10.11'
+jUnitVersion = '2.4.3'
 
 repositories {
     mavenCentral()
@@ -26,7 +26,7 @@ dependencies {
     testImplementation 'com.intellij.remoterobot:remote-fixtures:' + remoteRobotVersion
     testImplementation 'org.junit.jupiter:junit-jupiter-api:' + jUnitVersion
     // Video Recording
-    testImplementation 'com.automation-remarks:video-recorder-junit5:2.0'
+    testImplementation 'com.automation-remarks:video-recorder-junit2:2.0'
 
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:' + jUnitVersion
 

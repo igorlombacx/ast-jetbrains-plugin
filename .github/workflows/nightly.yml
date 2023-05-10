@@ -21,7 +21,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Show latest pre-release tag
-        uses: actions/checkout@v2
         run: echo "The latest pre-release tag is $(git describe --tags --abbrev=0 --match="*-*.*")"
       - name: Get latest prerelease tag
         id: latest_tag

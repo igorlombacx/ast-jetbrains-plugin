@@ -42,5 +42,5 @@ jobs:
         uses: Checkmarx/ast-jetbrains-plugin/.github/workflows/release.yml@main
         with:
           tag: ${{ steps.increment_version.outputs.version }}
-          rchannels: "nightly"
+          rchannels: "nightlyy"
         secrets: inherit

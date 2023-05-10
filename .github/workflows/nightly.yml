@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+  commit:
+    branches:
+      - main
 
 jobs:
   delete_tag:
@@ -20,27 +23,30 @@ jobs:
     needs: delete_tag
     runs-on: ubuntu-latest
     steps:
-      - name: Get latest release
-        id: latest_release
-        uses: actions/github-script@v4
-        with:
-          script: |
-            const { data } = await github.repos.getLatestRelease({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pre_release: true
-            });
-            console.log(data.tag_name);
-            return data.tag_name;
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-      - name: Increment version
-        id: increment_version
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Get latest prerelease tag
+        id: latest_tag
         run: |
-          echo "::set-output name=version::$(echo ${{ steps.latest_release.outputs.result }} | awk -F. '{$NF = $NF + 1;} 1' OFS=.)"
-      - name: Nightly release
-        uses: Checkmarx/ast-jetbrains-plugin/.github/workflows/release.yml@main
+          git fetch --tags
+          git tag --sort=-committerdate --points-at HEAD --merged 'refs/tags/*-*.*.*' --prerelease "*-*.*.*" | head -1 | xargs echo "::set-output name=tag::"
+      - name: Increment version
+        id: semver
+        uses: anothrNick/github-tag-action@v1.16
         with:
-          tag: ${{ steps.increment_version.outputs.version }}
-          rchannels: "nightlyy"
-        secrets: inherit
+          github_token: ${{ secrets.TOKEN }}
+          tag: ${{ steps.latest_tag.outputs.tag }}
+      - name: Set env
+        run: |
+          echo "RELEASE_VERSION=${{ steps.semver.outputs.new_tag }}" >> $GITHUB_ENV
+      - name: Build
+        run: ./gradlew buildPlugin
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.semver.outputs.new_tag }}
+          files: build/distributions/*
+      - name: Publish Plugin
+        env:
+          PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
+        run: ./gradlew publishPlugin -Prchannels=nightly

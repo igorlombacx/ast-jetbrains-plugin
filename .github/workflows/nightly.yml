@@ -6,6 +6,19 @@ on:
       - main
 
 jobs:
+  show-prerelease:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Show latest pre-release
+        id: prerelease
+        run: |
+          latest=$(git describe --tags --abbrev=0 --prerelease)
+          echo "::set-output name=version::$latest"
+      - name: Display output
+        run: |
+          echo "Latest pre-release version: ${{ steps.prerelease.outputs.version }}"
   delete_tag:
     runs-on: ubuntu-latest
     steps:
@@ -20,19 +33,6 @@ jobs:
     needs: delete_tag
     runs-on: ubuntu-latest
     steps:
-      - name: Show latest pre-release tag
-        run: echo "The latest pre-release tag is $(git describe --tags --abbrev=0 --match="*-*.*")"
-      - name: Get latest prerelease tag
-        id: latest_tag
-        run: |
-          git fetch --tags
-          git tag --sort=-committerdate --points-at HEAD --merged 'refs/tags/*-*.*.*' --prerelease "*-*.*.*" | head -1 | xargs echo "::set-output name=tag::"
-      - name: Increment version
-        id: semver
-        uses: anothrNick/github-tag-action@1.61.0
-        with:
-          github_token: ${{ secrets.TOKEN }}
-          tag: ${{ steps.latest_tag.outputs.tag }}
       - name: Set env
         run: |
           echo "RELEASE_VERSION=${{ steps.semver.outputs.new_tag }}" >> $GITHUB_ENV

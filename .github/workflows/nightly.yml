@@ -1,0 +1,46 @@
+name: Nightly Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  delete_tag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete release
+        uses: dev-drprasad/delete-tag-and-release@v0.2.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          delete_release: true
+          tag_name: 2.0.0-SNAPSHOT
+  nightly:
+    needs: delete_tag
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get latest release
+        id: latest_release
+        uses: actions/github-script@v4
+        with:
+          script: |
+            const { data } = await github.repos.getLatestRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pre_release: true
+            });
+            console.log(data.tag_name);
+            return data.tag_name;
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Increment version
+        id: increment_version
+        run: |
+          echo "::set-output name=version::$(echo ${{ steps.latest_release.outputs.result }} | awk -F. '{$NF = $NF + 1;} 1' OFS=.)"
+      - name: Nightly release
+        uses: Checkmarx/ast-jetbrains-plugin/.github/workflows/release.yml@main
+        with:
+          tag: ${{ steps.increment_version.outputs.version }}
+          rchannels: "nightly"
+        secrets: inherit

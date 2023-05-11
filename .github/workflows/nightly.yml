@@ -23,6 +23,6 @@ jobs:
     needs: delete_tag
     uses: Checkmarx/ast-jetbrains-plugin/.github/workflows/release.yml@main
     with:
-      tag: ${{ nightly.delete_tag.tagname.outputs.tag_name }}
+      tag: ${{ needs.delete_tag.tagname.outputs.tag_name }}
       rchannels: "nightly"
     secrets: inherit

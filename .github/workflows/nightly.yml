@@ -22,7 +22,7 @@ jobs:
       - name: Set tag variable
         run: tag=$'2.0.'$(date +%s)
   nightly:
-    needs: delete_tag, set_tag
+    needs: delete_tag
     uses: Checkmarx/ast-jetbrains-plugin/.github/workflows/release.yml@main
     with:
       tag: $ {{ env.tag }}

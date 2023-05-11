@@ -12,6 +12,8 @@ jobs:
       - name: Create tagname
         run: echo "tag_name=$'2.0.'$(date +%s)" >> "$GITHUB_OUTPUT"
         id: tagname
+      - name: Print tagname
+        run: echo "The created tagname is ${{ steps.tagname.outputs.tag_name }}"
       - name: Delete release
         uses: dev-drprasad/delete-tag-and-release@v0.2.1
         env:

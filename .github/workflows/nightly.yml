@@ -23,7 +23,7 @@ jobs:
         run: tag=$'2.0.'$(date +%s)
       - name: Print tag
         run: |
-          echo ${{ env.tag }}
+          echo "${{ env.tag }}"
   nightly:
     needs: delete_tag
     uses: Checkmarx/ast-jetbrains-plugin/.github/workflows/release.yml@main

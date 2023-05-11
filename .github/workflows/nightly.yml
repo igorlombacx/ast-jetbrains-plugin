@@ -16,16 +16,16 @@ jobs:
         with:
           delete_release: true
           tag_name: 2.0.0-SNAPSHOT
-  set_tag:
+  set_tag_timestamp:
     runs-on: ubuntu-latest
     steps:
       - name: Create tagname
-        run: echo "tagname=$'2.0.'$(date +%s)" >> "$GITHUB_ENV"
-        id: tagname
+        run: echo "tagtimestamp=$(date +%s)" >> $GITHUB_OUTPUT
+        id: tagtimestamp
   nightly:
     needs: delete_tag
     uses: Checkmarx/ast-jetbrains-plugin/.github/workflows/release.yml@main
     with:
-      tag: ${{ steps.set_tag.outputs.tagname }}
+      tag: ${{ jobs.set_tag_timestamp.outputs.tagtimestamp }}
       rchannels: "nightly"
     secrets: inherit

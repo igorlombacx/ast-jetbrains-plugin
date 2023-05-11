@@ -19,16 +19,13 @@ jobs:
   set_tag:
     runs-on: ubuntu-latest
     steps:
-      - name: Set tag variable
-        run: |
-          echo "TAG=$'2.0.'$(date +%s)" >> $GITHUB_ENV
-      - name: Print tag
-        run: |
-          echo "${{ env.tag }}"
+      - name: Create tagname
+        run: echo ::set-output name=tagname::2.0.$(date +%s)
+        id: create_tagname
   nightly:
     needs: delete_tag
     uses: Checkmarx/ast-jetbrains-plugin/.github/workflows/release.yml@main
     with:
-      tag: ${{ env.TAG }}
+      tag: ${{ outputs.tagname }}
       rchannels: "nightly"
     secrets: inherit

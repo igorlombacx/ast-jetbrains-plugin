@@ -21,10 +21,13 @@ jobs:
     steps:
       - name: Set tag variable
         run: tag=$'2.0.'$(date +%s)
+      - name: Print tag
+        run: |
+          echo ${{ env.tag }}
   nightly:
     needs: delete_tag
     uses: Checkmarx/ast-jetbrains-plugin/.github/workflows/release.yml@main
     with:
-      tag: $ {{ env.tag }}
+      tag: ${{ env.tag }}
       rchannels: "nightly"
     secrets: inherit

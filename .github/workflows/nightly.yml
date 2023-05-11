@@ -20,13 +20,11 @@ jobs:
     needs: delete_tag
     runs-on: ubuntu-latest
     steps:
-      - name: Set tag
-        run: |
-          tag=$'2.0.'$(date +%s)
-          echo "::set-env name=TAG_NAME::$tag"
-      - name: Nightly Release
+      - name: Set tag variable
+        run: tag=$'2.0.'$(date +%s)
+      - name: Run release job
         uses: Checkmarx/ast-jetbrains-plugin/.github/workflows/release.yml@main
         with:
-          tag: ${{ env.TAG_NAME }}
+          tag: ${{ env.tag }}
           rchannels: "nightly"
         secrets: inherit

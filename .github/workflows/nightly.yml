@@ -20,12 +20,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Create tagname
-        run: echo ::set-output name=tagname::2.0.$(date +%s)
-        id: create_tagname
+        run: echo "TAG_NAME=$($'2.0.'$(date +%s))" >> $GITHUB_ENV
   nightly:
     needs: delete_tag
     uses: Checkmarx/ast-jetbrains-plugin/.github/workflows/release.yml@main
     with:
-      tag: ${{ outputs.tagname }}
+      tag: ${{ env.TAG_NAME }}
       rchannels: "nightly"
     secrets: inherit

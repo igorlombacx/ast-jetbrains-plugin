@@ -15,7 +15,7 @@ jobs:
       - name: Delete release
         uses: dev-drprasad/delete-tag-and-release@v0.2.1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
           delete_release: true
           tag_name: 2.0.0-SNAPSHOT

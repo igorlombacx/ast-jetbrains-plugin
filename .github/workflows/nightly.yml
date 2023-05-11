@@ -8,6 +8,8 @@ on:
 jobs:
   delete_tag:
     runs-on: ubuntu-latest
+    outputs:
+      tag_name: ${{ steps.tagname.outputs.tag_name }}
     steps:
       - name: Create tagname
         run: echo "tag_name=2.0.$(date +%s)" >> "$GITHUB_OUTPUT"
@@ -25,6 +27,6 @@ jobs:
     needs: delete_tag
     uses: Checkmarx/ast-jetbrains-plugin/.github/workflows/release.yml@main
     with:
-      tag: ${{ needs.delete_tag.steps.tagname.outputs.tag_name }}
+      tag: ${{ needs.delete_tag.outputs.tag_name }}
       rchannels: "nightly"
     secrets: inherit

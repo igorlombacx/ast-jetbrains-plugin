@@ -20,7 +20,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set tag variable
-        run: tag=$'2.0.'$(date +%s)
+        run: |
+          echo "TAG=$'2.0.'$(date +%s)" >> $GITHUB_ENV
       - name: Print tag
         run: |
           echo "${{ env.tag }}"
@@ -28,6 +29,6 @@ jobs:
     needs: delete_tag
     uses: Checkmarx/ast-jetbrains-plugin/.github/workflows/release.yml@main
     with:
-      tag: ${{ env.tag }}
+      tag: ${{ env.TAG }}
       rchannels: "nightly"
     secrets: inherit

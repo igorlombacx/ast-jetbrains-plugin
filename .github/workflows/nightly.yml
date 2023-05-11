@@ -9,6 +9,9 @@ jobs:
   delete_tag:
     runs-on: ubuntu-latest
     steps:
+      - name: Create tagname
+        run: echo "tag_name=$'2.0.'$(date +%s) >> "$GITHUB_OUTPUT"
+        id: tagname
       - name: Delete release
         uses: dev-drprasad/delete-tag-and-release@v0.2.1
         env:
@@ -16,16 +19,10 @@ jobs:
         with:
           delete_release: true
           tag_name: 2.0.0-SNAPSHOT
-  set_tag_timestamp:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Create tagname
-        run: echo "tagtimestamp=$(date +%s)" >> $GITHUB_OUTPUT
-        id: tagtimestamp
   nightly:
     needs: delete_tag
     uses: Checkmarx/ast-jetbrains-plugin/.github/workflows/release.yml@main
     with:
-      tag: ${{ jobs.set_tag_timestamp.outputs.tagtimestamp }}
+      tag: ${{ nightly.delete_tag.tagname.outputs.tag_name }}
       rchannels: "nightly"
     secrets: inherit

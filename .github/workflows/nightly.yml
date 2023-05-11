@@ -17,9 +17,8 @@ jobs:
           delete_release: true
           tag_name: 2.0.0-SNAPSHOT
   set_tag:
-    - name: Create tagname
-      run: echo "tag_name=$'2.0.'$(date +%s) >> "$GITHUB_OUTPUT"
-      id: tagname
+    run: echo "tag_name=$'2.0.'$(date +%s) >> "$GITHUB_OUTPUT"
+    id: tagname
   nightly:
     needs: delete_tag
     uses: Checkmarx/ast-jetbrains-plugin/.github/workflows/release.yml@main

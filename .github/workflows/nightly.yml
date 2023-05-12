@@ -13,6 +13,7 @@ jobs:
         run: echo "tag_name=2.0.$(date +%s)" >> "$GITHUB_ENV"
       - name: Print tagname
         run: echo "created tag ${{ env.tag_name }}"
+      - name: Nightly Release
         uses: Checkmarx/ast-jetbrains-plugin/.github/workflows/release.yml@main
         with:
           tag: ${{ env.tag_name }}

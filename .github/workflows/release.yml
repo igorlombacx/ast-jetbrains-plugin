@@ -118,7 +118,7 @@ jobs:
         run: ./gradlew buildPlugin --info
       # Create the release or prerelease
       - name: Create Release or Prerelease
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.RELEASE_VERSION }}
           files: build/distributions/*
